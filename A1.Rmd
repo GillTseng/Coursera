@@ -62,26 +62,3 @@ steps_inter$interval[which.max(steps_inter$steps)]
 ## Imputing missing values
 
 Use mean of interval to replace missing value
-```{r replace}
-act_fill<-act
-
-if (is.na(act_fill$steps)) {
-        act_fill$steps[act_fill$interval == steps_inter$interval]<-steps_inter$steps
-} else {
-        act_fill$steps == act_fill$steps
-}
-
-
-for (i in nrow(act_fill)) {
-        if (is.na(act_fill$steps[i]) {
-                act_fill$steps[i][act_fill$interval[i] == steps_inter$interval[i]]<-steps_inter$steps
-                } else {
-        act_fill$steps == act_fill$step
-        }
-}
-
-act_sub<-subset(act,is.na(steps))
-for (i in 1:nrow(act_sub)) {
-        act_sub$steps[act_sub$interval[i] == steps_inter$interval[i]]<--steps_inter$steps
-}
-```
