@@ -1,0 +1,87 @@
+# Coursera Assignment 1
+
+Name: En Chieh Tseng
+Date: 06/13/2015
+
+## Data Preparation
+
+Load data into R studio
+```{r Load}
+setwd('C:/Users/sauce/Desktop/Coursera/assignment 1/repdata-data-activity')
+act<-read.csv('activity.csv')
+str(act)
+```
+
+Remove missiong value
+```{r remove_NA}
+table(is.na(act))
+act_new<-na.omit(act)
+table(is.na(act_new))
+```
+
+## What is mean total number of steps taken per day?
+
+Calcualte total steps per day
+```{r calculation}
+steps_day<-aggregate(steps~date, data=act_new, sum)
+```
+
+Create a total steps per day histogram
+```{r hist}
+library('ggplot2')
+qplot(date,steps,data=steps_day,geom='histogram',stat='identity')+ 
+        ggtitle('Total steps per day histogram')+
+        theme(plot.title = element_text(lineheight=3, face="bold", size=30)
+              ,axis.text.x = element_text(angle=90,size=10),axis.text.y = element_text(size=10),
+              axis.title=element_text(size=12,face="bold"))
+```
+
+Mean & Median of total steps per day
+```{r mean_median}
+library('doBy')
+summaryBy(steps~date, data=act_new, FUN=list(mean,median))
+```
+
+
+## What is the average daily activity pattern?
+
+Average steps by interval
+```{r steps_inter}
+steps_inter<-aggregate(steps~interval,data=act_new,mean)
+ggplot(steps_inter, aes(interval, steps)) + geom_line(size=1)+ggtitle('Average stpes by interval')+
+        theme(plot.title = element_text(lineheight=3, face="bold", size=30),axis.text.x = element_text(size=14),
+              axis.text.y = element_text(size=14),axis.title=element_text(size=14,face="bold"))
+```
+
+Which interval contains the maximum number of steps
+```{r}
+steps_inter$interval[which.max(steps_inter$steps)]
+```
+
+
+## Imputing missing values
+
+Use mean of interval to replace missing value
+```{r replace}
+act_fill<-act
+
+if (is.na(act_fill$steps)) {
+        act_fill$steps[act_fill$interval == steps_inter$interval]<-steps_inter$steps
+} else {
+        act_fill$steps == act_fill$steps
+}
+
+
+for (i in nrow(act_fill)) {
+        if (is.na(act_fill$steps[i]) {
+                act_fill$steps[i][act_fill$interval[i] == steps_inter$interval[i]]<-steps_inter$steps
+                } else {
+        act_fill$steps == act_fill$step
+        }
+}
+
+act_sub<-subset(act,is.na(steps))
+for (i in 1:nrow(act_sub)) {
+        act_sub$steps[act_sub$interval[i] == steps_inter$interval[i]]<--steps_inter$steps
+}
+```
